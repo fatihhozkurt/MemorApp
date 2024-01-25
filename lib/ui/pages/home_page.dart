@@ -199,3 +199,127 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+   //Hatırlatma Kartları
+  _showTasks() {
+    return Expanded(
+      child: Obx(() {
+        //Görev yok
+        if (_taskController.taskList.isEmpty) {
+          return _noTaskMsg();
+        } else
+          return ListView.builder(
+              scrollDirection: Axis.vertical,
+              //Kart sayısı
+              itemCount: _taskController.taskList.length,
+              itemBuilder: (context, index) {
+                Task task = _taskController.taskList[index];
+                //Günlük tekrar
+                if (task.repeat == 'Daily') {
+                  var hour = task.startTime.toString().split(":")[0];
+                  var minutes = task.startTime.toString().split(":")[1];
+                  debugPrint("My time is " + hour);
+                  debugPrint("My minute is " + minutes);
+
+                  //Saat formatı
+                  DateTime date = DateFormat.jm().parseLoose(task.startTime!);
+                  var myTime = DateFormat("HH:mm").format(date);
+
+                  //Zamanlanmış bildirim (ama)
+                  notifyHelper.scheduledNotification(
+                      int.parse(myTime.toString().split(":")[0]),
+                      int.parse(myTime.toString().split(":")[1]),
+                      task);
+
+                  //Animasyonlar için kullandığımız paketin ayarlanması
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 1375),
+                    child: SlideAnimation(
+                      horizontalOffset: 300.0,
+                      child: FadeInAnimation(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(context, task);
+                                },
+                                child: TaskTile(task)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                //Eğer görevin tarihi seçili tarihle aynıysa zamanlı bildirim ve kart animasyonlarını ayarla
+                if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 1375),
+                    child: SlideAnimation(
+                      horizontalOffset: 300.0,
+                      child: FadeInAnimation(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //Kartlara basıldığında çağrılacak fonksiyon
+                            GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(context, task);
+                                },
+                                child: TaskTile(task)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              });
+      }),
+    );
+  }
+
+  //Hatırlatma kartlarına basıldığında çağrılan fonksiyon
+  showBottomSheet(BuildContext context, Task task) {
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.only(top: 4, left: 6, right: 6, bottom: 4),
+        color: Get.isDarkMode ? darkHeaderClr : Colors.white,
+        child: Wrap(
+          children: [
+            Container(
+              height: 6,
+              width: 120,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
+              ),
+            ),
+            //Buton fonksiyonu
+            _buildBottomSheetButton(
+              label: "Tamamlandı",
+              onTap: () {
+                _taskController.markTaskCompleted(task.id);
+                Get.back();
+              },
+              clr: primaryClr,
+            ),
+            //Buton fonksiyonu
+            _buildBottomSheetButton(
+              label: "Hatırlatmayı Sil",
+              onTap: () {
+                _taskController.deleteTask(task);
+                Get.back();
+              },
+              clr: Colors.red[300],
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
+      isScrollControlled: true, // Take up the entire screen height
+    );
+  }
