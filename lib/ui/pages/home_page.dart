@@ -152,3 +152,50 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  //Appbar
+  AppBar _appBar() {
+    return AppBar(
+      elevation: 0,
+      //Appbar Lead
+      leading: GestureDetector(
+        onTap: () {
+          //Tema bildirimi
+          ThemeService().switchTheme();
+          notifyHelper.displayNotification(
+            title: "Tema Değiştirildi",
+            //Getx
+            body: Get.isDarkMode
+                ? "Aydınlık temaya geçildi."
+                : "Karanlık temaya geçildi",
+          );
+
+          notifyHelper.scheduledNotification();
+          notifyHelper.periodicalyNotification();
+        },
+        child: Icon(
+          Get.isDarkMode ? Icons.wb_sunny : Icons.shield_moon,
+          color: Get.isDarkMode ? Colors.white : darkGreyClr,
+          size: 32,
+        ),
+      ),
+      //Appbar Mid
+      title: Center(
+        child: Image.asset(
+          "lib/assets/appicon.png",
+          width: 54, // İstediğiniz genişliği belirleyin
+          height: 54, // İstediğiniz yüksekliği belirleyin
+        ),
+      ),
+      //Appbar Tail
+      actions: [
+        CircleAvatar(
+          radius: 16,
+          backgroundImage: AssetImage("lib/assets/sergeant.png"),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+      ],
+    );
+  }
