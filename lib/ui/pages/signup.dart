@@ -146,3 +146,64 @@ class _SignUpState extends State<SignUp> {
                                   : Icons.visibility_off))),
                     ),
                   ),
+                  const SizedBox(height: 15),
+                  //Kayıt ol butonu
+                  Container(
+                    //Kayıt ol butonunun görünüm özelleştirmeleri
+                    height: 55,
+                    width: MediaQuery.of(context).size.width * .5,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.black),
+                    child: TextButton(
+                        //Butona tıklandığında gerçekleşecek fonksiyon
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            //Eğer form doğrulanmışsa DatabaseHelper sınıfından db adında bir nesne oluşturur
+                            final db = DatabaseHelper();
+                            //Kullanıcı bilgilerini veri tabanına kayıt eder
+                            db
+                                .signup(Users(
+                                    usrName: username.text,
+                                    usrPassword: password.text))
+                                .whenComplete(() {
+                              //Kayıt ettikten sonra kullanıcıyı Giriş Yap sayfasına yönlendirir
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            });
+                          }
+                        },
+                        child: const Text(
+                          "Kayıt Ol",
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ),
+
+                  //Kayıt Ol butonu
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //Kullanıcının hesabı varsa onu Giriş Yap sayfasına yönlendiriyoruz
+                      const Text("Zaten hesabın var mı?"),
+                      TextButton(
+                          //"Zaten hesabın var mı? Giriş Yap" tıklandığında Giriş Yap sayfasına yönlendiriyoruz
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          },
+                          child: const Text("Giriş Yap"))
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
