@@ -263,3 +263,107 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 SizedBox(
                   height: 18.0,
                 ),
+                //Hatırlatma oluşturma butonunu
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _colorChips(),
+                    MyButton(
+                      label: "Oluştur",
+                      onTap: () {
+                        _validateInputs();
+                      },
+                    ),
+                  ],
+                ),
+
+                SizedBox(
+                  height: 30.0,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //Hatırlatma ekleme alanının boş olması durumunda hata döndüren elegant bildirim.
+  _validateInputs() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      _addTaskToDB();
+      Get.back();
+    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
+      Get.snackbar(
+        "Uyarı!",
+        "Tüm alanların doldurulması gerekmektedir",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } else {
+      print("############ SOMETHING BAD HAPPENED #################");
+    }
+  }
+
+  //Hatırlatmalar oluşturulduktan sonra değişkenlere atanıp veri tabanına kaydedilmesi
+  _addTaskToDB() async {
+    await _taskController.addTask(
+      task: Task(
+        note: _noteController.text,
+        title: _titleController.text,
+        date: DateFormat.yMd().format(_selectedDate),
+        startTime: _startTime,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+        color: _selectedColor,
+        isCompleted: 0,
+      ),
+    );
+  }
+
+  //Hatırlatma kartının 3 farklı renginin ayarlanması
+  _colorChips() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        "Renk",
+        style: titleTextStle,
+      ),
+      SizedBox(
+        height: 8,
+      ),
+      Wrap(
+        children: List<Widget>.generate(
+          3,
+          (int index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedColor = index;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CircleAvatar(
+                  radius: 14,
+                  backgroundColor: index == 0
+                      ? primaryClr
+                      : index == 1
+                          ? pinkClr
+                          : yellowClr,
+                  child: index == _selectedColor
+                      ? Center(
+                          child: Icon(
+                            Icons.done,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        )
+                      : Container(),
+                ),
+              ),
+            );
+          },
+        ).toList(),
+      ),
+    ]);
+  }
