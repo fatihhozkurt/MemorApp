@@ -199,7 +199,8 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-   //Hatırlatma Kartları
+
+  //Hatırlatma Kartları
   _showTasks() {
     return Expanded(
       child: Obx(() {
@@ -323,3 +324,78 @@ class _HomePageState extends State<HomePage> {
       isScrollControlled: true, // Take up the entire screen height
     );
   }
+
+  //BottomSheet in buton componenti için fonksiyonu
+  _buildBottomSheetButton(
+      {required String label,
+      Function? onTap,
+      Color? clr,
+      bool isClose = false}) {
+    return GestureDetector(
+      onTap: onTap as void Function()?,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4),
+        height: 55,
+        width: SizeConfig.screenWidth,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: isClose
+                ? Get.isDarkMode
+                    ? Colors.grey[600]!
+                    : Colors.grey[300]!
+                : clr!,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          color: isClose ? Colors.transparent : clr,
+        ),
+        child: Center(
+            child: Text(
+          label,
+          style: isClose
+              ? titleTextStle
+              : titleTextStle.copyWith(color: Colors.white),
+        )),
+      ),
+    );
+  }
+
+  _noTaskMsg() {
+    double paddingTop = 50.0; // İstediğiniz padding miktarı
+
+    return Stack(
+      children: [
+        AnimatedPositioned(
+          duration: Duration(milliseconds: 2000),
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    "lib/assets/alarm.svg",
+                    color: primaryClr.withOpacity(0.8),
+                    height: 90,
+                    semanticsLabel: 'Task',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: Text(
+                      "Henüz hatırlatma eklemedin! \n Ya da eklemeyi mi unuttun?",
+                      textAlign: TextAlign.center,
+                      style: subTitleTextStle,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
