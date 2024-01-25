@@ -367,3 +367,68 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
     ]);
   }
+   //AppBar
+  _appBar() {
+    return AppBar(
+        elevation: 0,
+        //Hatırlatma sayfasına geri dönüş butonu
+        leading: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(Icons.arrow_back_ios, size: 24, color: primaryClr),
+        ),
+        //Çavuş köpek avatarı
+        actions: [
+          CircleAvatar(
+            radius: 16,
+            backgroundImage: AssetImage("lib/assets/sergeant.png"),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+        ]);
+  }
+
+  double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
+
+  //Kullanıcının saat seçimi yapmasını sağlayan fonksiyon
+  _getTimeFromUser({required bool isStartTime}) async {
+    var _pickedTime = await _showTimePicker();
+    print(_pickedTime.format(context));
+    String? _formatedTime = _pickedTime.format(context);
+    print(_formatedTime);
+    if (_pickedTime == null)
+      print("İptal edildi");
+    else if (isStartTime)
+      setState(() {
+        _startTime = _formatedTime;
+      });
+  }
+
+  //Saat seçimi widgetının olduğu bölüm
+  _showTimePicker() async {
+    return showTimePicker(
+      initialTime: TimeOfDay(
+          hour: int.parse(_startTime!.split(":")[0]),
+          minute: int.parse(_startTime!.split(":")[1].split(" ")[0])),
+      initialEntryMode: TimePickerEntryMode.input,
+      context: context,
+    );
+  }
+
+  //Kullanıcının tarih seçimi yapmasını sağlayan widget6
+  _getDateFromUser() async {
+    final DateTime? _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2101));
+    if (_pickedDate != null) {
+      setState(() {
+        _selectedDate = _pickedDate;
+      });
+    }
+  }
+}
