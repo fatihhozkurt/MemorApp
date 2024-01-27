@@ -11,7 +11,6 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
-//
 class _SignUpState extends State<SignUp> {
   //Kullanıcı adı, şifre, şifre doğrulama ve şifre görünürlüğü değişkenlerinin atanması
   final username = TextEditingController();
@@ -181,7 +180,7 @@ class _SignUpState extends State<SignUp> {
                         )),
                   ),
 
-                  //Kayıt Ol butonu
+                  //Zaten bir hesabın var mı linki
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

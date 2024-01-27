@@ -9,6 +9,9 @@ import 'package:task_management/ui/theme.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:get/get.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotifyHelper {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -20,7 +23,6 @@ class NotifyHelper {
   initializeNotification() async {
     _configureSelectNotificationSubject();
     await _configureLocalTimeZone();
-    // await requestIOSPermissions(flutterLocalNotificationsPlugin);
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
             requestSoundPermission: false,
@@ -40,7 +42,7 @@ class NotifyHelper {
       if (data != null) {
         debugPrint('notification payload: ' + data.payload!);
       }
-      selectNotificationSubject.add(data.payload);
+      selectNotificationSubject.add(data.payload!);
     });
   }
 
@@ -63,7 +65,6 @@ class NotifyHelper {
 
   Future selectNotification(String payload) async {
     if (payload != null) {
-      //selectedNotificationPayload = "The best";
       selectNotificationSubject.add(payload);
       print('notification payload: $payload');
     } else {
@@ -74,7 +75,6 @@ class NotifyHelper {
 
   Future onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
-    // display a dialog with the notification details, tap ok to go to another page
     showDialog(
       context: Get.context!,
       builder: (BuildContext context) => CupertinoAlertDialog(
@@ -134,7 +134,6 @@ class NotifyHelper {
       task.title,
       task.note,
       _nextInstanceOfTenAM(hour, minutes),
-      //tz.TZDateTime.now(tz.local).add(const Duration(days:0, minutes: 0, seconds: 15)),
       const NotificationDetails(
           android: AndroidNotificationDetails(
         'your channel id',
@@ -145,9 +144,6 @@ class NotifyHelper {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: "${task.title}|" + "${task.note}|" + "${task.startTime}|",
     );
-    /*
-        if payload crushes try to do flutter clean and reboot
-         */
   }
 
   void _configureSelectNotificationSubject() {
@@ -184,8 +180,8 @@ class SecondScreenState extends State<SecondScreen> {
 
   @override
   void initState() {
-    super.initState();
     _payload = widget.payload;
+    super.initState();
   }
 
   @override
@@ -228,7 +224,6 @@ class SecondScreenState extends State<SecondScreen> {
               width: double.maxFinite,
               padding: const EdgeInsets.only(left: 30, right: 30, top: 50),
               margin: const EdgeInsets.only(left: 30, right: 30),
-              //child:Text('${_payload}'),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

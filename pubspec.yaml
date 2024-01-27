@@ -23,6 +23,14 @@ dependencies:
   flutter_native_timezone_updated_gradle: ^2.0.3
   shared_preferences: ^2.2.2
   file_picker: ^6.1.1
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/appicon.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "lib/assets/ic_launcher.png"
 
 dev_dependencies:
   flutter_test:

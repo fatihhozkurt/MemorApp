@@ -11,8 +11,7 @@ import 'package:task_management/ui/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  await DBHelper
-      .initDb(); // Assuming this initializes a different database than GetStorage
+  await DBHelper.initDb();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
-      home: LoginScreen(), // Starting with LoginScreen
+      home: LoginScreen(),
     );
   }
 }
