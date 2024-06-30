@@ -1,1 +1,1 @@
-A reminder app written with Flutter.
+This mobile app made as a reminder with using Flutter (Dart). Users can set, track and delete reminders as wished. Also users can configure reminder properties such as notification sound. There's different styles for reminder cards and the interface has a dark/light mode switch. 
